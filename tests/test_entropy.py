@@ -1,6 +1,5 @@
 import pytest
-from blockhash_entropy.entropy import entropy_from_block
-
+from blockhash_entropy.entropy import entropy_from_block, tagged_hash
 def test_entropy_is_the_same():
     block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
 
@@ -18,10 +17,10 @@ def test_entropy_is_inside_range():
     assert 0 <= result < 100
 
 def test_different_tags_give_different_results():
-    block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
+    block_hash = "00" * 32
 
-    result1 = entropy_from_block(block_hash, 100, "test a")
-    result2 = entropy_from_block(block_hash, 100, "test b")
+    result1 = tagged_hash("test a", bytes.fromhex(block_hash))
+    result2 = tagged_hash("test b", bytes.fromhex(block_hash))
 
     assert result1 != result2
 
