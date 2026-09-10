@@ -11,6 +11,9 @@ def tagged_hash(tag, data):
 
 
 def entropy_from_block(block_hash, modulus, tag="blockhash-entropy"):
+    if not isinstance(modulus, int) or isinstance(modulus, bool):
+        raise ValueError("modulus must be an integer")
+
     if modulus < 1:
         raise ValueError("modulus must be >= 1")
 

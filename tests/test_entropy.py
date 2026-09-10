@@ -67,3 +67,18 @@ def test_entropy_retries_when_number_is_too_large(monkeypatch):
 def test_invalid_hex_is_rejected():
     with pytest.raises(ValueError):
         entropy_from_block("zz" * 32, 100)
+
+def test_invalid_modulus_type_is_rejected():
+    block_hash = "00" * 32
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, True)
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, False)
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, 10.5)
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, "10")
