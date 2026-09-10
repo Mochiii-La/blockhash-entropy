@@ -14,6 +14,9 @@ def entropy_from_block(block_hash, modulus, tag="blockhash-entropy"):
     if modulus < 1:
         raise ValueError("modulus must be >= 1")
 
+    if modulus > MAX_VALUE:
+        raise ValueError("modulus must be <= 2**256")
+
     block_hash_bytes = bytes.fromhex(block_hash)
 
     if len(block_hash_bytes) != 32:
