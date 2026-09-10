@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blockhash-entropy"
+version = "0.1.0"
+description = "Use Bitcoin block hashes to generate deterministic values"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["src"]
