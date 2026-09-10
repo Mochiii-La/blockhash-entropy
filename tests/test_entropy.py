@@ -1,3 +1,4 @@
+import pytest
 from blockhash_entropy.entropy import entropy_from_block
 
 def test_entropy_is_the_same():
@@ -23,3 +24,17 @@ def test_different_tags_give_different_results():
     result2 = entropy_from_block(block_hash, 100, "test b")
 
     assert result1 != result2
+
+def test_modulus_below_one_is_rejected():
+    block_hash = "00" * 32
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, 0)
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, -1)
+
+
+def test_wrong_length_hash_is_rejected():
+    with pytest.raises(ValueError):
+        entropy_from_block("ab", 100)    
