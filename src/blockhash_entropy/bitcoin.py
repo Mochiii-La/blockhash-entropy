@@ -10,7 +10,17 @@ def get_block_hash(height):
 
     try:
         with urllib.request.urlopen(url) as response:
-            return response.read().decode()
+            block_hash = response.read().decode()
+
+        if len(block_hash) != 64:
+            raise RuntimeError("Bitcoin API returned an invalid block hash")
+
+        try:
+            bytes.fromhex(block_hash)
+        except ValueError:
+            raise RuntimeError("Bitcoin API returned an invalid block hash")
+
+        return block_hash
 
     except urllib.error.HTTPError as error:
         raise RuntimeError(

@@ -48,3 +48,41 @@ def test_api_connection_error(monkeypatch):
     with pytest.raises(RuntimeError):
         get_block_hash(0)
 
+def test_invalid_hash_length(monkeypatch):
+    class FakeResponse:
+        def read(self):
+            return b"abcd"
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+    monkeypatch.setattr(
+        "blockhash_entropy.bitcoin.urllib.request.urlopen",
+        lambda url: FakeResponse(),
+    )
+
+    with pytest.raises(RuntimeError):
+        get_block_hash(0)
+
+
+def test_invalid_hash_hex(monkeypatch):
+    class FakeResponse:
+        def read(self):
+            return b"z" * 64
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+    monkeypatch.setattr(
+        "blockhash_entropy.bitcoin.urllib.request.urlopen",
+        lambda url: FakeResponse(),
+    )
+
+    with pytest.raises(RuntimeError):
+        get_block_hash(0)

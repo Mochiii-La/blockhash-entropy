@@ -8,6 +8,11 @@ def test_entropy_is_the_same():
 
     assert result1 == result2
 
+def test_modulus_above_limit_is_rejected():
+    block_hash = "00" * 32
+
+    with pytest.raises(ValueError):
+        entropy_from_block(block_hash, 2**256 + 1)
 
 def test_entropy_is_inside_range():
     block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
