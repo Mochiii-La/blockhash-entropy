@@ -16,7 +16,7 @@ def test_entropy_is_inside_range():
 
     assert 0 <= result < 100
 
-def test_different_tags_give_diffrent_results():
+def test_different_tags_give_different_results():
     block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
 
     result1 = entropy_from_block(block_hash, 100, "test a")
