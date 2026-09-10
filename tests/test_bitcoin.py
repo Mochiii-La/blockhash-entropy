@@ -1,7 +1,5 @@
 import urllib.error
-
 import pytest
-
 from blockhash_entropy.bitcoin import get_block_hash
 
 
@@ -18,7 +16,7 @@ def test_invalid_height_is_rejected():
         get_block_hash("100")
 
 def test_api_http_error(monkeypatch):
-    def fake_urlopen(url):
+    def fake_urlopen(url, timeout=10):
         raise urllib.error.HTTPError(
             url,
             404,
@@ -37,7 +35,7 @@ def test_api_http_error(monkeypatch):
 
 
 def test_api_connection_error(monkeypatch):
-    def fake_urlopen(url):
+    def fake_urlopen(url, timeout=10):
         raise urllib.error.URLError("connection failed")
 
     monkeypatch.setattr(
@@ -61,7 +59,7 @@ def test_invalid_hash_length(monkeypatch):
 
     monkeypatch.setattr(
         "blockhash_entropy.bitcoin.urllib.request.urlopen",
-        lambda url: FakeResponse(),
+        lambda url, timeout=10: FakeResponse(),
     )
 
     with pytest.raises(RuntimeError):
@@ -81,7 +79,7 @@ def test_invalid_hash_hex(monkeypatch):
 
     monkeypatch.setattr(
         "blockhash_entropy.bitcoin.urllib.request.urlopen",
-        lambda url: FakeResponse(),
+        lambda url, timeout: FakeResponse(),
     )
 
     with pytest.raises(RuntimeError):

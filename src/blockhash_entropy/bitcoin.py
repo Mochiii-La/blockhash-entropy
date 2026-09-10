@@ -9,7 +9,7 @@ def get_block_hash(height):
     url = f"https://mempool.space/api/block-height/{height}"
 
     try:
-        with urllib.request.urlopen(url) as response:
+        with urllib.request.urlopen(url, timeout=10) as response:
             block_hash = response.read().decode()
 
         if len(block_hash) != 64:
