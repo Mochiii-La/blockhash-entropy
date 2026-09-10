@@ -1,5 +1,6 @@
 import hashlib
 
+MAX_VALUE = 2**256
 
 def tagged_hash(tag, data):
     tag_hash = hashlib.sha256(tag.encode()).digest()
@@ -18,8 +19,17 @@ def entropy_from_block(block_hash, modulus, tag="blockhash-entropy"):
     if len(block_hash_bytes) != 32:
         raise ValueError("block_hash must be 32 bytes (64 hex chars)")
 
-    result = tagged_hash(tag, block_hash_bytes)
+    limit = MAX_VALUE - (MAX_VALUE % modulus)
 
-    number = int.from_bytes(result, byteorder="big")
+    counter = 0
 
-    return number % modulus
+    while True:
+        data = block_hash_bytes + counter.to_bytes(4, byteorder="big")
+        result = tagged_hash(tag, data)
+
+        number = int.from_bytes(result, byteorder="big")
+
+        if number < limit:
+            return number % modulus
+
+        counter += 1

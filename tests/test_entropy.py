@@ -37,3 +37,28 @@ def test_modulus_below_one_is_rejected():
 def test_wrong_length_hash_is_rejected():
     with pytest.raises(ValueError):
         entropy_from_block("ab", 100)    
+
+def test_entropy_retries_when_number_is_too_large(monkeypatch):
+    calls = []
+
+    def fake_tagged_hash(tag, data):
+        calls.append(data)
+
+        if len(calls) == 1:
+            return (2**256 - 1).to_bytes(32, byteorder="big")
+
+        return (0).to_bytes(32, byteorder="big")
+
+    monkeypatch.setattr(
+        "blockhash_entropy.entropy.tagged_hash",
+        fake_tagged_hash,
+    )
+
+    result = entropy_from_block("00" * 32, 100)
+
+    assert result == 0
+    assert len(calls) == 2
+
+def test_invalid_hex_is_rejected():
+    with pytest.raises(ValueError):
+        entropy_from_block("zz" * 32, 100)
