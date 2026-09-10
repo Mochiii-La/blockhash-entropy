@@ -71,6 +71,8 @@ def test_entropy_retries_when_number_is_too_large(monkeypatch):
 
     assert result == 0
     assert len(calls) == 2
+    assert calls[0] == b"\x00" * 32 + b"\x00\x00\x00\x00"
+    assert calls[1] == b"\x00" * 32 + b"\x00\x00\x00\x01"
 
 def test_invalid_hex_is_rejected():
     with pytest.raises(ValueError):
