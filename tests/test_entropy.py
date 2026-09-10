@@ -1,5 +1,13 @@
 import pytest
 from blockhash_entropy.entropy import entropy_from_block, tagged_hash
+
+def test_genesis_block_known_vector():
+    block_hash = "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+
+    result = entropy_from_block(block_hash, 100)
+
+    assert result == 66
+
 def test_entropy_is_the_same():
     block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
 
